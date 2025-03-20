@@ -1,7 +1,7 @@
 import os
 import re
 from typing import List, Dict
-
+from slack_bolt import Say
 import openai
 import json
 
@@ -49,6 +49,7 @@ agent = Agent(client, agent_config)
 session_id = agent.create_session("lightspeed-session")
 
 def call_ls(
+    say: Say,
     messages: str,
     system_content: str = DEFAULT_SYSTEM_CONTENT,
 ) -> str:
@@ -91,18 +92,21 @@ def call_ls(
                             # yield self.format_token(tool_call, id)
                             
                 elif event_type == "step_complete":
+                    if reply_message:
+                        say(markdown_to_slack(reply_message))
+                        reply_message = ""
                     # if not is_monospace:
                     #     is_monospace = True
                     #     yield self.format_token("\n```\n", id)
                     
-                    pass
+                    # pass
                     # step_details = payload.get("step_details")
 
                 elif event_type == "turn_complete":
-                    return markdown_to_slack(reply_message)
+                    if reply_message:
+                        say(markdown_to_slack(reply_message))
+                        reply_message = ""
         
-    return ""
-    # return markdown_to_slack(response.choices[0].message.content)
 
 
 # Conversion from OpenAI markdown to Slack mrkdwn

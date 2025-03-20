@@ -88,8 +88,9 @@ def respond_in_assistant_thread(
                 if message.get("user") is not None:
                     prompt += f"\n<@{message['user']}> says: {message['text']}\n"
             messages_in_thread = [{"role": "user", "content": prompt}]
-            returned_message = call_llm(messages_in_thread)
-            say(returned_message)
+            call_ls(say, messages_in_thread)
+            # returned_message = call_llm(messages_in_thread)
+            # say(returned_message)
             return
 
         # replies = client.conversations_replies(
@@ -102,8 +103,8 @@ def respond_in_assistant_thread(
         # for message in replies["messages"]:
         #     role = "user" if message.get("bot_id") is None else "assistant"
         #     messages_in_thread.append({"role": role, "content": message["text"]})
-        returned_message = call_ls(user_message)
-        say(returned_message)
+        call_ls(say, user_message)
+        # say(returned_message)
 
     except Exception as e:
         logger.exception(f"Failed to handle a user message event: {e}")
