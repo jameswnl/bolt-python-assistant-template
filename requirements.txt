@@ -2,6 +2,7 @@ slack-bolt>=1.21,<2
 slack-sdk>=3.33.1,<4
 # If you use a different LLM vendor, replace this dependency
 openai
+llama_stack_client
 
 pytest
 flake8

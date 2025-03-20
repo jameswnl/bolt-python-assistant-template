@@ -6,6 +6,7 @@ from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
 from .llm_caller import call_llm
+from .ls_caller import call_ls
 
 # Refer to https://tools.slack.dev/bolt-python/concepts/assistant/ for more details
 assistant = Assistant()
@@ -91,17 +92,17 @@ def respond_in_assistant_thread(
             say(returned_message)
             return
 
-        replies = client.conversations_replies(
-            channel=context.channel_id,
-            ts=context.thread_ts,
-            oldest=context.thread_ts,
-            limit=10,
-        )
-        messages_in_thread: List[Dict[str, str]] = []
-        for message in replies["messages"]:
-            role = "user" if message.get("bot_id") is None else "assistant"
-            messages_in_thread.append({"role": role, "content": message["text"]})
-        returned_message = call_llm(messages_in_thread)
+        # replies = client.conversations_replies(
+        #     channel=context.channel_id,
+        #     ts=context.thread_ts,
+        #     oldest=context.thread_ts,
+        #     limit=10,
+        # )
+        # messages_in_thread: List[Dict[str, str]] = []
+        # for message in replies["messages"]:
+        #     role = "user" if message.get("bot_id") is None else "assistant"
+        #     messages_in_thread.append({"role": role, "content": message["text"]})
+        returned_message = call_ls(user_message)
         say(returned_message)
 
     except Exception as e:
