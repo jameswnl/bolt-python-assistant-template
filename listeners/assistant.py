@@ -25,17 +25,18 @@ def start_assistant_thread(
 
         prompts: List[Dict[str, str]] = [
             {
-                "title": "What does Slack stand for?",
-                "message": "Slack, a business communication service, was named after an acronym. Can you guess what it stands for?",
+                "title": "Why Ansible Automation Platform?",
+                "message": "Why Ansible Automation Platform?",
             },
             {
-                "title": "Write a draft announcement",
-                "message": "Can you write a draft announcement about a new feature my team just released? It must include how impactful it is.",
+                "title": "How do I get started with Ansible Automation Platform?",
+                "message": "How do I get started with Ansible Automation Platform?",
             },
             {
-                "title": "Suggest names for my Slack app",
-                "message": "Can you suggest a few names for my Slack app? The app helps my teammates better organize information and plan priorities and action items.",
+                "title": "How many inventories in my Ansible Automation Platform?",
+                "message": "How many inventories in my Ansible Automation Platform?",
             },
+
         ]
 
         thread_context = get_thread_context()

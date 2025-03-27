@@ -46,13 +46,14 @@ agent_config = AgentConfig(
     enable_session_persistence=False,
 )
 agent = Agent(client, agent_config)
-session_id = agent.create_session("lightspeed-session")
+
 
 def call_ls(
     say: Say,
     messages: str,
     system_content: str = DEFAULT_SYSTEM_CONTENT,
 ) -> str:
+    session_id = agent.create_session("lightspeed-session")
     response = agent.create_turn(
         messages=[
             {
