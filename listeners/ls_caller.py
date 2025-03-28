@@ -10,35 +10,24 @@ from llama_stack_client import AsyncLlamaStackClient, LlamaStackClient
 from llama_stack_client.lib.agents.agent import AsyncAgent, Agent
 from llama_stack_client.types.agent_create_params import AgentConfig
 
+LLAMA_STACK_URL = os.getenv("LLAMA_STACK_URL", "http://localhost:8321")
+INFERENCE_MODEL = os.getenv("INFERENCE_MODEL", "anthropic/claude-3-5-haiku-latest")
+SYSTEM_PROMPT = os.getenv("SYSTEM_PROMPT", "You are a helpful Ansible Automation Platform assistant.")
+TOOL_GROUPS = os.getenv("TOOL_GROUPS", "mcp::aap_api,mcp::ls_api,builtin::websearch").split(",")
 
-DEFAULT_SYSTEM_CONTENT = """
-You're an assistant in a Slack workspace.
-Users in the workspace will ask you to help them write something or to think better about a specific topic.
-You'll respond to those questions in a professional way.
-When you include markdown text, convert them to Slack compatible ones.
-When a prompt has Slack's special syntax like <@USER_ID> or <#CHANNEL_ID>, you must keep them as-is in your response.
-"""
 
 client = LlamaStackClient(
-    base_url="http://localhost:8321",
+    base_url=LLAMA_STACK_URL,
 )
 agent_config = AgentConfig(
-    model="anthropic/claude-3-5-haiku-latest",
+    model=INFERENCE_MODEL,
     # model="llama3.2:3b-instruct-fp16",
-    instructions="You are a helpful Ansible Automation Platform assistant.",
+    instructions=SYSTEM_PROMPT,
     sampling_params={
         "strategy": {"type": "top_p", "temperature": 1.0, "top_p": 0.9},
     },
     toolgroups=(
-        [
-            # "mcp::weather",
-            # "mcp::github",
-            # "mcp::fs",
-            "mcp::aap_api",
-            # "mcp::controller_api",
-            # "mcp::gateway_api",
-            "builtin::websearch",
-        ]
+        TOOL_GROUPS
     ),
     tool_choice="auto",
     input_shields=[],  # available_shields if available_shields else [],
@@ -50,8 +39,7 @@ agent = Agent(client, agent_config)
 
 def call_ls(
     say: Say,
-    messages: str,
-    system_content: str = DEFAULT_SYSTEM_CONTENT,
+    messages: str
 ) -> str:
     session_id = agent.create_session("lightspeed-session")
     response = agent.create_turn(
